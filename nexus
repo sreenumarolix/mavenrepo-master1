@@ -1,0 +1,81 @@
+
+                                       INSTALL NEXUS  IN REDHAT SERVER
+   ----------------------------------------------------------------------------------------------
+1.logn as a Root user 
+$sudo -i
+
+2.install wget and java
+
+#sudo yum install wget -y
+#sudo yum  install java-1.8*
+
+3.now install Sonatype Nexus web server
+#cd /opt/  -->change directory
+https://help.sonatype.com/ --------->search in google
+------------------------------------------------------------------------------------------------------
+https://help.sonatype.com/repomanager3/product-information/download
+------------------------------------------------------------------------------------------------------
+Nexus Repository 3.40.1
+
+Unix archive
+# sudo wget https://download.sonatype.com/nexus/3/nexus-3.40.1-01-unix.tar.gz
+
+4.unzip tar file
+  # sudo tar -zxvf nexus-3.40.1-01-unix.tar.gz
+
+
+5.rename the NEXUS-----> /opt/nexus-3.40.1-01 /opt/nexus
+#sudo mv /opt/nexus-3.40.1-01 /opt/nexus
+
+6.adduser nexus
+# sudo adduser  nexus
+
+7. Give normal user acess
+#visudo
+root    ALL=(ALL)         ALL= ALL
+nexus ALL=(ALL)        NOPASSWD: ALL
+
+8.Change owner and group permissions (nexus and sonatype-work dir)
+
+#chown -R nexus.nexus /opt/nexus
+#chown -R nexus.nexus /opt/sonatype-work
+#chmod -R 775 /opt/nexus
+#chmod -R 775 /opt/sonatype-work
+
+9./opt/nexus/bin/nexus.rc  file ----Uncomment 
+#vi /opt/nexus/bin/nexus.rc
+    run_as_user="nexus"   ----set as nexus user
+
+10.create nexus service
+#ln -s /opt/nexus/bin/nexus /etc/init.d/nexus
+
+11.Switch to nexus user
+#su - nexus
+............................................................................................................................
+#sudo chkconfig nexus on ---------> only on AMI server
+ 
+12.Enable nexus service
+#sudo systemctl enable nexus
+
+13.Start nexus service 
+#sudo systemctl start nexus
+#sudo systemctl status nexus
+
+
+
+http://54.172.34.105:8081/    to acess in browser
+
+login : admin
+passwd:
+ cat /opt/sonatype-work/nexus3/admin.password
+
+# cat /opt/sonatype-work/nexus3/admin.password
+97686fb5-3c54-4b54-9ed2-a1e209c95c89
+
+
+
+
+
+after creating repose 2
+snap --->http://54.167.55.142:8081/repository/ajio_snapshot/
+release ----->http://54.167.55.142:8081/repository/ajio_release/
